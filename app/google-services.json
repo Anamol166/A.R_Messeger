@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263642066544",
+    "project_id": "a-r-messeger",
+    "storage_bucket": "a-r-messeger.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263642066544:android:be719d251886ab648eceb5",
+        "android_client_info": {
+          "package_name": "com.example.armesseger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF1_C5mTIaIgNm6RINsN-6_FDjQmOjzEQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

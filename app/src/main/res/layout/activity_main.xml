@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue"
+    tools:context=".MainActivity">
+
+    <!-- Top Logo -->
+    <TextView
+        android:id="@+id/mainlogo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:fontFamily="@font/apptext2"
+        android:gravity="center_vertical"
+        android:text="  A.R Messenger"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_30sdp"
+        android:textStyle="bold"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/wholesearchbar"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:hint="Search users..."
+        android:padding="12dp"
+        android:background="@color/white"
+        android:textSize="16sp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/mainlogo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- RecyclerView for Users -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainrecyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/wholesearchbar"
+        app:layout_constraintBottom_toTopOf="@+id/bottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Bottom Bar -->
+    <TextView
+        android:id="@+id/bottomBar"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Camera Logo -->
+    <ImageView
+        android:id="@+id/cameralogo"
+        android:layout_width="90dp"
+        android:layout_height="71dp"
+        android:src="@drawable/cameralogo"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/bottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Options Icon -->
+    <ImageView
+        android:id="@+id/option"
+        android:layout_width="60dp"
+        android:layout_height="47dp"
+        android:src="@drawable/optiondefault"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Logout Icon -->
+    <ImageView
+        android:id="@+id/logoutmain"
+        android:layout_width="77dp"
+        android:layout_height="58dp"
+        android:src="@drawable/logoutdefault"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/friendrequest1"
+        android:layout_width="80dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/friendrequest"
+        app:layout_constraintBottom_toBottomOf="@id/bottomBar"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
