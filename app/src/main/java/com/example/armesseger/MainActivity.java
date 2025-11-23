@@ -1,26 +1,27 @@
 package com.example.armesseger;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         mainRecyclerView = findViewById(R.id.mainrecyclerview);
         searchBar = findViewById(R.id.wholesearchbar);
         friendRequestButton = findViewById(R.id.friendrequest1);
-
         logout = findViewById(R.id.logoutmain);
+
         if (auth.getCurrentUser() == null) {
             startActivity(new Intent(MainActivity.this, login.class));
             finish();
@@ -61,9 +62,30 @@ public class MainActivity extends AppCompatActivity {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mainRecyclerView.setAdapter(adapter);
 
+        setupLogoutDialog();
         setupFriendRequestButton();
-        loadFriendsOnly(); // load only friends
+        loadFriendsOnly();
         setupSearchBar();
+    }
+    private void setupLogoutDialog() {
+        logout.setOnClickListener(v -> {
+
+            Dialog dialog = new Dialog(MainActivity.this, R.style.dialouge);
+            dialog.setContentView(R.layout.dialog_layout);
+
+            Button btnCancel = dialog.findViewById(R.id.btnCancel);
+            Button btnLogout = dialog.findViewById(R.id.btnLogout);
+
+            btnCancel.setOnClickListener(v1 -> dialog.dismiss());
+
+            btnLogout.setOnClickListener(v12 -> {
+                auth.signOut();
+                startActivity(new Intent(MainActivity.this, login.class));
+                finish();
+            });
+            Objects.requireNonNull(dialog.getWindow()).setGravity(Gravity.CENTER);
+            dialog.show();
+        });
     }
 
     private void setupFriendRequestButton() {
@@ -72,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Load only friends of current user
     private void loadFriendsOnly() {
         DatabaseReference reference = database.getReference().child("users");
 
@@ -87,10 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
                     user.setUid(dataSnapshot.getKey());
 
-                    // Skip current user
                     if (user.getUid().equals(currentUserId)) continue;
 
-                    // Check if this user is a friend
                     DataSnapshot friendsSnapshot = dataSnapshot.child("friends");
                     boolean isFriend = friendsSnapshot.exists() &&
                             friendsSnapshot.child(currentUserId).exists();
@@ -101,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                adapter.updateList(usersArrayList); // refresh friend-only list
+                adapter.updateList(usersArrayList);
             }
 
             @Override
@@ -121,28 +140,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Filter search to only show friends
     private void filterList(String text) {
-        ArrayList<Users> filteredList = new ArrayList<>();
+        ArrayList<Users> filtered = new ArrayList<>();
 
         for (Users user : usersArrayList) {
             if (user.getUsername() != null &&
                     user.getUsername().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(user);
+                filtered.add(user);
             }
         }
 
-        adapter.updateList(filteredList);
+        adapter.updateList(filtered);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         if (auth.getCurrentUser() != null) {
-            database.getReference("users")
-                    .child(auth.getCurrentUser().getUid())
-                    .child("status")
-                    .setValue("online");
+            database.getReference("users").child(currentUserId).child("status").setValue("online");
         }
     }
 
@@ -150,10 +165,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (auth.getCurrentUser() != null) {
-            database.getReference("users")
-                    .child(auth.getCurrentUser().getUid())
-                    .child("status")
-                    .setValue("offline");
+            database.getReference("users").child(currentUserId).child("status").setValue("offline");
         }
     }
 }
