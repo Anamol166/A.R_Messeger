@@ -1,5 +1,6 @@
 package com.example.armesseger;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,10 +42,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Users user = usersArrayList.get(position);
 
-        // Name
         holder.tvName.setText(user.getUsername());
 
-        // Status
         String status = user.getStatus();
         if (status == null) status = "offline";
 
@@ -56,7 +55,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             holder.tvStatus.setTextColor(Color.GRAY);
         }
 
-        // Profile Image
         if (user.getImageUrl() == null ||
                 user.getImageUrl().equals("default") ||
                 user.getImageUrl().equals("no_image")) {
@@ -69,6 +67,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     .placeholder(R.drawable.maledefault)
                     .into(holder.profileImage);
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mainActivity, chatwin.class);
+                intent.putExtra("userId", user.getUid());
+                intent.putExtra("username", user.getUsername());
+                intent.putExtra("status",user.getStatus());
+                intent.putExtra("profile_image", user.getImageUrl());
+                mainActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override
