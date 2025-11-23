@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, login.class));
                 finish();
             });
-            Objects.requireNonNull(dialog.getWindow()).setGravity(Gravity.CENTER);
             dialog.show();
         });
     }
