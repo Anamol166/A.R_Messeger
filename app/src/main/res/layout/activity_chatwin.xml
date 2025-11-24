@@ -69,18 +69,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="12dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/messages_recycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_bar" />
-
     <androidx.cardview.widget.CardView
+        android:id="@+id/message_input_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -92,9 +82,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingStart="12dp"
             android:paddingEnd="12dp">
 
@@ -104,22 +94,33 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@null"
-                android:hint="Message..."
                 android:fontFamily="@font/apptext3"
-                android:textSize="16sp"
                 android:gravity="center_vertical"
+                android:hint="Message..."
                 android:paddingStart="12dp"
-                android:paddingEnd="12dp"/>
+                android:paddingEnd="12dp"
+                android:textSize="16sp" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/send_button"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:src="@drawable/senddefault"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="8dp"
+                android:src="@drawable/senddefault" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messages_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        app:layout_constraintBottom_toTopOf="@id/message_input_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/receiver_layout"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

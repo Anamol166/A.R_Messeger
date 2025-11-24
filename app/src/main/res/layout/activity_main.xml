@@ -8,8 +8,6 @@
     android:layout_height="match_parent"
     android:background="@color/bluev2"
     tools:context=".MainActivity">
-
-    <!-- Top Logo -->
     <TextView
         android:id="@+id/mainlogo"
         android:layout_width="0dp"
@@ -28,13 +26,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Search Bar -->
     <EditText
         android:id="@+id/wholesearchbar"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:hint="Search Friends"
+        android:hint="Search Friends..."
         android:padding="12dp"
         android:background="@color/white"
         android:textSize="16sp"
@@ -44,8 +40,6 @@
         app:layout_constraintTop_toBottomOf="@id/mainlogo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- RecyclerView for Users -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainrecyclerview"
         android:layout_width="0dp"
@@ -56,8 +50,6 @@
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Bottom Bar -->
     <TextView
         android:id="@+id/bottomBar"
         android:layout_width="0dp"
@@ -66,8 +58,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Camera Logo -->
     <ImageView
         android:id="@+id/cameralogo"
         android:layout_width="90dp"
@@ -77,8 +67,6 @@
         app:layout_constraintBottom_toBottomOf="@id/bottomBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Options Icon -->
     <ImageView
         android:id="@+id/option"
         android:layout_width="60dp"
@@ -88,8 +76,6 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Logout Icon -->
     <ImageView
         android:id="@+id/logoutmain"
         android:layout_width="77dp"
@@ -99,7 +85,6 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
     <ImageView
         android:id="@+id/friendrequest1"
         android:layout_width="80dp"

@@ -9,7 +9,6 @@ public class Users {
     private String imageUrl;
     private String status;
 
-    // Friend request flags
     private boolean hasSentRequest = false;
     private boolean hasReceivedRequest = false;
     private boolean isFriend = false;
@@ -24,7 +23,6 @@ public class Users {
         this.status = "offline";
     }
 
-    // Getters and setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
@@ -43,7 +41,6 @@ public class Users {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    // Friend request flags
     public boolean isHasSentRequest() { return hasSentRequest; }
     public void setHasSentRequest(boolean hasSentRequest) { this.hasSentRequest = hasSentRequest; }
 

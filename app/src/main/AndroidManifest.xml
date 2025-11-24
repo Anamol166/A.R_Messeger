@@ -17,7 +17,7 @@
             android:name=".chatwin"
             android:exported="false" />
         <activity
-            android:name=".ChatWin"
+            android:name=".chatwin"
             android:exported="false" />
         <activity
             android:name=".Chatwindow"

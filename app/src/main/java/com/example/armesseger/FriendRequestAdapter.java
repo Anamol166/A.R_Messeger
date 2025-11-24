@@ -115,7 +115,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         TextView tvName;
         ImageView profileImage;
         // These can be null depending on the layout inflated (friendsendingui vs friendrequestuser)
-        ImageView acceptButton, rejectButton, sendButton;
+        ImageView rejectButton, sendButton;
+        TextView acceptButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
