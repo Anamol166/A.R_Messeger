@@ -1,9 +1,11 @@
 package com.example.armesseger;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,22 +29,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public MessageAdapter(Context context, ArrayList<MessageModel> messageList, String receiverImage) {
         this.context = context;
         this.messageList = messageList;
-        // Ensuring receiverImage is never null
         this.receiverImage = receiverImage != null ? receiverImage : "";
     }
 
     @Override
     public int getItemViewType(int position) {
         MessageModel message = messageList.get(position);
-        // Using a local variable for current user ID check for clarity
         String currentUid = FirebaseAuth.getInstance().getCurrentUser() != null ?
                 FirebaseAuth.getInstance().getCurrentUser().getUid() : "";
-
-        if (currentUid.equals(message.getSenderUid())) {
-            return ITEM_SENDER;
-        } else {
-            return ITEM_RECEIVER;
-        }
+        return currentUid.equals(message.getSenderUid()) ? ITEM_SENDER : ITEM_RECEIVER;
     }
 
     @NonNull
@@ -62,15 +57,46 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         MessageModel message = messageList.get(position);
 
         if (holder instanceof SenderViewHolder) {
-            ((SenderViewHolder) holder).messageText.setText(message.getMessage());
+            SenderViewHolder senderHolder = (SenderViewHolder) holder;
+
+            if (message.getImageUrl() != null && !message.getImageUrl().isEmpty()) {
+                senderHolder.messageText.setVisibility(View.GONE);
+                senderHolder.messageImage.setVisibility(View.VISIBLE);
+                Picasso.get().load(message.getImageUrl()).into(senderHolder.messageImage);
+
+                senderHolder.messageImage.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, FullScreenImageActivity.class);
+                    intent.putExtra(FullScreenImageActivity.IMAGE_URL, message.getImageUrl());
+                    context.startActivity(intent);
+                });
+            } else {
+                senderHolder.messageText.setVisibility(View.VISIBLE);
+                senderHolder.messageImage.setVisibility(View.GONE);
+                senderHolder.messageText.setText(message.getMessage());
+            }
+
         } else if (holder instanceof ReceiverViewHolder) {
             ReceiverViewHolder receiverHolder = (ReceiverViewHolder) holder;
-            receiverHolder.messageText.setText(message.getMessage());
 
-            if (!receiverImage.isEmpty()) {
+            if (!receiverImage.isEmpty())
                 Picasso.get().load(receiverImage).placeholder(R.drawable.maledefault).into(receiverHolder.profileImage);
-            } else {
+            else
                 receiverHolder.profileImage.setImageResource(R.drawable.maledefault);
+
+            if (message.getImageUrl() != null && !message.getImageUrl().isEmpty()) {
+                receiverHolder.messageText.setVisibility(View.GONE);
+                receiverHolder.messageImage.setVisibility(View.VISIBLE);
+                Picasso.get().load(message.getImageUrl()).into(receiverHolder.messageImage);
+
+                receiverHolder.messageImage.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, FullScreenImageActivity.class);
+                    intent.putExtra(FullScreenImageActivity.IMAGE_URL, message.getImageUrl());
+                    context.startActivity(intent);
+                });
+            } else {
+                receiverHolder.messageText.setVisibility(View.VISIBLE);
+                receiverHolder.messageImage.setVisibility(View.GONE);
+                receiverHolder.messageText.setText(message.getMessage());
             }
         }
     }
@@ -82,21 +108,25 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     static class SenderViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
+        ImageView messageImage;
 
         SenderViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.sender_message_text);
+            messageImage = itemView.findViewById(R.id.sender_message_image);
         }
     }
 
     static class ReceiverViewHolder extends RecyclerView.ViewHolder {
         CircleImageView profileImage;
         TextView messageText;
+        ImageView messageImage;
 
         ReceiverViewHolder(@NonNull View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.receiver_profile_image);
             messageText = itemView.findViewById(R.id.receiver_message_text);
+            messageImage = itemView.findViewById(R.id.receiver_message_image);
         }
     }
 }

@@ -4,24 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="2dp"    android:paddingBottom="2dp">
+    android:padding="4dp">
+
     <TextView
-    android:id="@+id/sender_message_text"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="2dp"     android:layout_marginBottom="2dp"  android:layout_marginStart="64dp"
-    android:layout_marginEnd="8dp"
-    android:background="@drawable/sender_bg_chat"
-    android:paddingStart="12dp"
-    android:paddingEnd="12dp"
-    android:paddingTop="8dp"   android:paddingBottom="8dp" android:text="Hi there!"
-    android:textColor="@android:color/white"
-    android:textSize="16sp"
-    app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constrainedWidth="true" />
+        android:id="@+id/sender_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginStart="60dp"
+        android:background="@drawable/sender_bg_chat"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/sender_message_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="60dp"
+        android:background="@drawable/sender_bg_chat"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
