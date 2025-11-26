@@ -21,6 +21,16 @@ public class InternetCheckActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Please check your internet connection", Toast.LENGTH_LONG).show();
         }
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+
+            startActivity(new Intent(InternetCheckActivity.this, MainActivity.class));
+            finish();
+        } else {
+            startActivity(new Intent(InternetCheckActivity.this, login.class));
+            finish();
+        }
+
     }
     private boolean isConnectedToInternet() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
@@ -30,5 +40,6 @@ public class InternetCheckActivity extends AppCompatActivity {
         }
         return false;
     }
+
 
 }

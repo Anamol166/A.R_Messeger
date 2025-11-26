@@ -2,17 +2,24 @@ package com.example.armesseger;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +42,13 @@ public class MainActivity extends AppCompatActivity {
     ImageView friendRequestButton;
     String currentUserId;
     ImageView logout;
+    private boolean doublebackexit;
+
+    Uri photoUri;
+    ImageView cameralogo;
+    private String selectedFriendId="FriendId";
+    private static final int CAMERA = 101;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -45,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainRecyclerView = findViewById(R.id.mainrecyclerview);
         searchBar = findViewById(R.id.wholesearchbar);
+        cameralogo = findViewById(R.id.cameralogo);
         friendRequestButton = findViewById(R.id.friendrequest1);
         logout = findViewById(R.id.logoutmain);
 
@@ -62,18 +79,93 @@ public class MainActivity extends AppCompatActivity {
             tokenRef.setValue(token);
         });
 
-
         currentUserId = auth.getCurrentUser().getUid();
         usersArrayList = new ArrayList<>();
         adapter = new UserAdapter(this, usersArrayList);
 
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mainRecyclerView.setAdapter(adapter);
+        cameralogo.setOnClickListener(v -> openCamera());
 
         setupLogoutDialog();
         setupFriendRequestButton();
         loadFriendsOnly();
         setupSearchBar();
+        initCloudinary();
+    }
+    private void initCloudinary() {
+        HashMap config = new HashMap();
+        config.put("cloud_name", "dxy0ywfqp");
+        config.put("api_key", "974368724742381");
+        config.put("api_secret", "m86UxhYefgUyOm-u69eTZfSDjPE");
+
+        try {
+            MediaManager.init(this, config);
+        } catch (Exception ignored) {}
+    }
+
+    private void openCamera() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE,"New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION,"From Camera");
+        photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+        startActivityForResult(cameraIntent,101);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA && resultCode == RESULT_OK) {
+            uploadImageToClodinary(photoUri);
+        }
+    }
+
+    private void uploadImageToClodinary(Uri photoUri) {
+        MediaManager.get().upload(photoUri).option("resouce_type","image").callback(
+                new com.cloudinary.android.callback.UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) {
+                    }
+
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                    }
+
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+                        String ImageUrl = (String) resultData.get("secure_url");
+                        if (ImageUrl != null) {
+                            sendImageToFriend(ImageUrl, selectedFriendId);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
+
+                    }
+
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) {
+
+                    }
+                }
+        );
+    }
+
+    private void sendImageToFriend(String imageUrl, String selectedFriendId) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(doublebackexit){
+            finishAffinity();
+            return;
+        }
+        this.doublebackexit = true;
+        Toast.makeText(this,"Press BACK again to exit",Toast.LENGTH_SHORT).show();
+        new android.os.Handler().postDelayed(() -> doublebackexit = false,2000);
     }
     private void setupLogoutDialog() {
         logout.setOnClickListener(v -> {

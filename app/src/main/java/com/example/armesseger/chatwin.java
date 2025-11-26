@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class chatwin extends AppCompatActivity {
 
     private ArrayList<MessageModel> messageArrayList;
     private MessageAdapter messageAdapter;
-    private TextView getUserStatus;
+    private ImageView backarrow;
 
     private static final int PICK_IMAGES_REQUEST = 101;
 
@@ -58,7 +59,7 @@ public class chatwin extends AppCompatActivity {
         galleryButton = findViewById(R.id.gallery_button);
         messageBox = findViewById(R.id.message_input);
         messageList = findViewById(R.id.messages_recycler);
-        getUserStatus = findViewById(R.id.user_status);
+        backarrow = findViewById(R.id.backarrow);
 
         username = findViewById(R.id.username);
         userStatus = findViewById(R.id.user_status);
@@ -101,6 +102,7 @@ public class chatwin extends AppCompatActivity {
         loadMessages();
         initCloudinary();
 
+        backarrow.setOnClickListener(v -> chat());
         sendButton.setOnClickListener(v -> sendMessage());
         galleryButton.setOnClickListener(v -> openGallery());
         DatabaseReference statusRef = database.getReference("Users")
@@ -125,9 +127,15 @@ public class chatwin extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
+    }
+
+    private void chat() {
+        startActivity(new Intent(chatwin.this, MainActivity.class));
+        finish();
     }
 
     private void loadMessages() {

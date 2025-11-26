@@ -50,13 +50,10 @@ public class login extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                try {
                                     Intent intent = new Intent(login.this, MainActivity.class);
                                     startActivity(intent);
-                                } catch (Exception e) {
-                                    Toast.makeText(login.this, "Check your email or password", Toast.LENGTH_LONG).show();
                                 }
-                            } else {
+                             else {
                                 Toast.makeText(login.this,"Check your email or password", Toast.LENGTH_LONG).show();
                             }
                         }
