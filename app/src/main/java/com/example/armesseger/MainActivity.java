@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,8 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) return;
+
+            String token = task.getResult();
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("Tokens").child(userId);
+            tokenRef.setValue(token);
+        });
+
 
         currentUserId = auth.getCurrentUser().getUid();
         usersArrayList = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.example.armesseger;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -43,6 +44,7 @@ public class chatwin extends AppCompatActivity {
 
     private ArrayList<MessageModel> messageArrayList;
     private MessageAdapter messageAdapter;
+    private TextView getUserStatus;
 
     private static final int PICK_IMAGES_REQUEST = 101;
 
@@ -56,6 +58,7 @@ public class chatwin extends AppCompatActivity {
         galleryButton = findViewById(R.id.gallery_button);
         messageBox = findViewById(R.id.message_input);
         messageList = findViewById(R.id.messages_recycler);
+        getUserStatus = findViewById(R.id.user_status);
 
         username = findViewById(R.id.username);
         userStatus = findViewById(R.id.user_status);
@@ -100,6 +103,31 @@ public class chatwin extends AppCompatActivity {
 
         sendButton.setOnClickListener(v -> sendMessage());
         galleryButton.setOnClickListener(v -> openGallery());
+        DatabaseReference statusRef = database.getReference("Users")
+                .child(receiverUid)
+                .child("status");
+
+        statusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String status = snapshot.getValue(String.class);
+                if (status == null || status.isEmpty()) {
+                    userStatus.setText("Offline");
+                    userStatus.setTextColor(Color.GRAY);
+                } else {
+                    userStatus.setText(status);
+                    if (status.equalsIgnoreCase("online")) {
+                        userStatus.setTextColor(Color.GREEN);
+                    } else {
+                        userStatus.setTextColor(Color.GRAY);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
     }
 
     private void loadMessages() {
@@ -139,6 +167,7 @@ public class chatwin extends AppCompatActivity {
         } catch (Exception ignored) {}
     }
 
+
     private void sendMessage() {
         String messageText = messageBox.getText().toString().trim();
         if (messageText.isEmpty()) return;
@@ -159,9 +188,11 @@ public class chatwin extends AppCompatActivity {
                         .child("Messages");
 
                 receiverRef.push().setValue(message);
+                sendNotification(receiverUid, receiverName, messageText);
             }
         });
     }
+
 
     private void sendImage(String imageUrl) {
         if (imageUrl == null || imageUrl.isEmpty()) return;
@@ -184,6 +215,45 @@ public class chatwin extends AppCompatActivity {
             }
         });
     }
+    private void sendNotification(String receiverId, String title, String message) {
+        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("Tokens").child(receiverId);
+        tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String token = snapshot.getValue(String.class);
+
+                    new Thread(() -> {
+                        try {
+                            okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
+                            okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json; charset=utf-8");
+
+                            String json = "{ \"to\":\"" + token + "\", \"data\":{ " +
+                                    "\"title\":\"" + title + "\"," +
+                                    "\"message\":\"" + message + "\"," +
+                                    "\"senderId\":\"" + senderUid + "\" }}";
+
+                            okhttp3.RequestBody body = okhttp3.RequestBody.create(json, mediaType);
+                            okhttp3.Request request = new okhttp3.Request.Builder()
+                                    .url("https://fcm.googleapis.com/fcm/send")
+                                    .post(body)
+                                    .addHeader("Authorization", "key=axK41ehqBm_m1u7aPcHwWfH0NCk9-yBZ7wVEYzfBKlw")
+                                    .addHeader("Content-Type", "application/json")
+                                    .build();
+
+                            okhttp3.Response response = client.newCall(request).execute();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -212,4 +282,5 @@ public class chatwin extends AppCompatActivity {
             }
         }
     }
+
 }

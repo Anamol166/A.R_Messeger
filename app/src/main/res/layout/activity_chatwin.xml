@@ -9,7 +9,7 @@
     android:background="@color/bluev2"
     tools:context=".chatwin">
 
-    <!-- TOP BAR -->
+
     <View
         android:id="@+id/top_bar"
         android:layout_width="0dp"
@@ -41,12 +41,11 @@
         app:layout_constraintTop_toTopOf="@id/top_bar"
         app:layout_constraintBottom_toBottomOf="@id/top_bar"/>
 
-    <!-- FIXED: THESE IDs MUST MATCH JAVA -->
     <TextView
         android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Friend Name"
+        android:text=""
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:textSize="18sp"
@@ -60,7 +59,7 @@
         android:id="@+id/user_status"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Online"
+        android:text=""
         android:textColor="@android:color/darker_gray"
         android:textSize="14sp"
         android:layout_marginStart="12dp"

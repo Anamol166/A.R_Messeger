@@ -19,6 +19,7 @@ kotlin = "2.2.0"
 coreKtx = "1.17.0"
 firebaseFirestore = "26.0.2"
 recyclerview = "1.4.0"
+firebaseMessaging = "25.0.1"
 
 [libraries]
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
@@ -38,6 +39,7 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage", v
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
