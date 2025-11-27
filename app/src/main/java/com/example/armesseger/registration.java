@@ -69,7 +69,7 @@ public class registration extends AppCompatActivity {
 
         try {
             MediaManager.init(this, config);
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 
     private void signupUser() {
@@ -106,14 +106,12 @@ public class registration extends AppCompatActivity {
                         if (imageurl != null) {
                             uploadToCloudinary(imageurl, name, mail, reference, pass);
                         } else {
-                            // DEFAULT IMAGE + STATUS FIELD
                             HashMap<String, Object> user = new HashMap<>();
                             user.put("username", name);
                             user.put("email", mail);
                             user.put("password", pass);
-                            user.put("imageUrl", "https://res.cloudinary.com/dxy0ywfqp/image/upload/v1763741711/1000115750_jpivhz.png");   // <--- default picture
-                            user.put("status", "offline");      // <--- status added
-
+                            user.put("imageUrl", "https://res.cloudinary.com/dxy0ywfqp/image/upload/v1763741711/1000115750_jpivhz.png");
+                            user.put("status", "offline");
                             saveUserToDB(reference, user);
                         }
 
@@ -144,7 +142,7 @@ public class registration extends AppCompatActivity {
                         user.put("email", mail);
                         user.put("password", pass);
                         user.put("imageUrl", image);
-                        user.put("status", "offline"); // default OFFLINE
+                        user.put("status", "offline");
 
                         saveUserToDB(reference, user);
                     }
