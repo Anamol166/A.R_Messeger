@@ -1,1 +1,1 @@
-This is my first Android application, so the project may not be fully optimized. Still, it features a clean and simple UI, and the overall structure is easy to follow, making it a great starting point for beginners who want to learn how to build real-time chat apps.
+
