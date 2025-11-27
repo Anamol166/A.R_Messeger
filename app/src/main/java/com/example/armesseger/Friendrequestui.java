@@ -23,13 +23,11 @@ public class Friendrequestui extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FriendRequestAdapter adapter;
-    ArrayList<Users> userList; // All users
-    ArrayList<Users> filteredList; // Display list (Requests or Search results)
+    ArrayList<Users> userList;
+    ArrayList<Users> filteredList;
     EditText searchBar;
     DatabaseReference database;
     String currentUserId;
-
-    // Hold the current user's relationships for efficient filtering/status setting
     DataSnapshot currentUserDataSnapshot;
 
     @Override
@@ -75,8 +73,6 @@ public class Friendrequestui extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userList.clear();
                 filteredList.clear();
-
-                // --- Step 1: Get Current User's Relationships ---
                 currentUserDataSnapshot = snapshot.child(currentUserId);
                 DataSnapshot myReceivedRequests = currentUserDataSnapshot.child("receivedRequests");
                 DataSnapshot mySentRequests = currentUserDataSnapshot.child("sentRequests");
@@ -90,24 +86,18 @@ public class Friendrequestui extends AppCompatActivity {
 
                     if (user.getUid().equals(currentUserId)) continue;
 
-                    // --- Step 2: Set relationship flags from Current User's perspective ---
-
-                    // Has this user sent a request to me? (I have received it)
                     user.setHasReceivedRequest(myReceivedRequests.exists() &&
                             myReceivedRequests.child(user.getUid()).exists());
 
-                    // Have I sent a request to this user?
                     user.setHasSentRequest(mySentRequests.exists() &&
                             mySentRequests.child(user.getUid()).exists());
 
-                    // Is this user my friend?
                     user.setFriend(myFriends.exists() &&
                             myFriends.child(user.getUid()).exists());
 
-                    // --- Step 3: Initial filtering for Friend Requests UI (only show received requests) ---
                     if (user.isHasReceivedRequest()) filteredList.add(user);
 
-                    userList.add(user); // Add all users for search functionality
+                    userList.add(user);
                 }
 
                 adapter.isSearchMode = false;
@@ -141,7 +131,6 @@ public class Friendrequestui extends AppCompatActivity {
                 } else {
                     adapter.isSearchMode = false;
 
-                    // When search is cleared, revert to showing only received requests
                     for (Users user : userList) {
                         if (user.isHasReceivedRequest()) filteredList.add(user);
                     }
@@ -153,24 +142,18 @@ public class Friendrequestui extends AppCompatActivity {
     }
 
     private void sendFriendRequest(Users user) {
-        // Current user sends request
         database.child(currentUserId).child("sentRequests").child(user.getUid()).setValue(true);
-        // Target user receives request
         database.child(user.getUid()).child("receivedRequests").child(currentUserId).setValue(true);
     }
 
     private void acceptRequest(Users user) {
-        // Add to friends list for both users
         database.child(currentUserId).child("friends").child(user.getUid()).setValue(true);
         database.child(user.getUid()).child("friends").child(currentUserId).setValue(true);
-
-        // Remove from received/sent requests
         database.child(currentUserId).child("receivedRequests").child(user.getUid()).removeValue();
         database.child(user.getUid()).child("sentRequests").child(currentUserId).removeValue();
     }
 
     private void rejectRequest(Users user) {
-        // Remove from received/sent requests
         database.child(currentUserId).child("receivedRequests").child(user.getUid()).removeValue();
         database.child(user.getUid()).child("sentRequests").child(currentUserId).removeValue();
     }

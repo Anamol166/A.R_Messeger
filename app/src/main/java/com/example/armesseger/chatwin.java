@@ -166,9 +166,9 @@ public class chatwin extends AppCompatActivity {
 
     private void initCloudinary() {
         HashMap config = new HashMap();
-        config.put("cloud_name", "dxy0ywfqp");
-        config.put("api_key", "974368724742381");
-        config.put("api_secret", "m86UxhYefgUyOm-u69eTZfSDjPE");
+        config.put("cloud_name", "");
+        config.put("api_key", "");
+        config.put("api_secret", "");
 
         try {
             MediaManager.init(this, config);
@@ -200,52 +200,54 @@ public class chatwin extends AppCompatActivity {
             }
         });
     }
-
-
     private void sendImage(String imageUrl) {
         if (imageUrl == null || imageUrl.isEmpty()) return;
 
-        long timestamp = new Date().getTime();
-
+        long timestamp = System.currentTimeMillis();
         MessageModel message = new MessageModel(imageUrl, senderUid, timestamp, true);
 
-        DatabaseReference senderRef = database.getReference("chats")
-                .child(senderRoom)
-                .child("Messages");
-
-        senderRef.push().setValue(message).addOnCompleteListener(task -> {
+        database.getReference("chats").child(senderRoom).child("Messages").push().setValue(message);
+        database.getReference("chats").child(receiverRoom).child("Messages").push().setValue(message).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                DatabaseReference receiverRef = database.getReference("chats")
-                        .child(receiverRoom)
-                        .child("Messages");
-
-                receiverRef.push().setValue(message);
+                sendNotification(receiverUid, receiverName, "sent a photo");
             }
         });
     }
+
+
     private void sendNotification(String receiverId, String title, String message) {
         DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("Tokens").child(receiverId);
+        String senderUsername = username.getText().toString();
+
         tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String token = snapshot.getValue(String.class);
-
+                    final String FCM_SERVER_KEY = "";
                     new Thread(() -> {
                         try {
                             okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
                             okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json; charset=utf-8");
-
-                            String json = "{ \"to\":\"" + token + "\", \"data\":{ " +
-                                    "\"title\":\"" + title + "\"," +
-                                    "\"message\":\"" + message + "\"," +
-                                    "\"senderId\":\"" + senderUid + "\" }}";
+                            String json = "{"
+                                    + "\"to\":\"" + token + "\","
+                                    + "\"notification\":{"
+                                    + "\"title\":\"New message from " + senderUsername + "\","
+                                    + "\"body\":\"" + message + "\","
+                                    + "\"sound\":\"default\""
+                                    + "},"
+                                    + "\"data\":{"
+                                    + "\"title\":\"" + senderUsername + "\","
+                                    + "\"message\":\"" + message + "\","
+                                    + "\"senderId\":\"" + senderUid + "\""
+                                    + "}"
+                                    + "}";
 
                             okhttp3.RequestBody body = okhttp3.RequestBody.create(json, mediaType);
                             okhttp3.Request request = new okhttp3.Request.Builder()
                                     .url("https://fcm.googleapis.com/fcm/send")
                                     .post(body)
-                                    .addHeader("Authorization", "key=axK41ehqBm_m1u7aPcHwWfH0NCk9-yBZ7wVEYzfBKlw")
+                                    .addHeader("Authorization", "key=" + FCM_SERVER_KEY)
                                     .addHeader("Content-Type", "application/json")
                                     .build();
 
@@ -261,6 +263,7 @@ public class chatwin extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
+
 
 
     private void openGallery() {

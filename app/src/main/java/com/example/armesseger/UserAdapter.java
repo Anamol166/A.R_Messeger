@@ -29,7 +29,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         this.usersArrayList = list;
         notifyDataSetChanged();
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,15 +40,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Users user = usersArrayList.get(position);
-
         holder.tvName.setText(user.getUsername());
 
         String status = user.getStatus();
         if (status == null) status = "offline";
 
         holder.tvStatus.setText(status);
-
-        if (status.equals("online")) {
+        if ("online".equals(status)) {
             holder.tvStatus.setTextColor(Color.GREEN);
         } else {
             holder.tvStatus.setTextColor(Color.GRAY);
@@ -67,16 +64,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     .placeholder(R.drawable.maledefault)
                     .into(holder.profileImage);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mainActivity, chatwin.class);
-                intent.putExtra("userId", user.getUid());
-                intent.putExtra("username", user.getUsername());
-                intent.putExtra("status",user.getStatus());
-                intent.putExtra("profile_image", user.getImageUrl());
-                mainActivity.startActivity(intent);
-            }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(mainActivity, chatwin.class);
+            intent.putExtra("userId", user.getUid());
+            intent.putExtra("username", user.getUsername());
+            intent.putExtra("status",user.getStatus());
+            intent.putExtra("profile_image", user.getImageUrl());
+            mainActivity.startActivity(intent);
         });
     }
 
@@ -92,7 +87,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             profileImage = itemView.findViewById(R.id.profileImage);
             tvName = itemView.findViewById(R.id.tvName);
             tvStatus = itemView.findViewById(R.id.tvStatus);

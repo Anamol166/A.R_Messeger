@@ -109,7 +109,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     static class SenderViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
         ImageView messageImage;
-
         SenderViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.sender_message_text);
@@ -121,7 +120,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         CircleImageView profileImage;
         TextView messageText;
         ImageView messageImage;
-
         ReceiverViewHolder(@NonNull View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.receiver_profile_image);

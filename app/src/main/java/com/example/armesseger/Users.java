@@ -8,13 +8,11 @@ public class Users {
     private String uid;
     private String imageUrl;
     private String status;
-
     private boolean hasSentRequest = false;
     private boolean hasReceivedRequest = false;
     private boolean isFriend = false;
 
     public Users() { }
-
     public Users(String username, String email, String password, String imageUrl) {
         this.username = username;
         this.email = email;

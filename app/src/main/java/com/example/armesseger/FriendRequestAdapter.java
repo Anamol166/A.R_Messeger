@@ -20,7 +20,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     Context context;
     ArrayList<Users> requests;
     OnRequestActionListener listener;
-    public boolean isSearchMode; // true = search, false = normal friend request mode
+    public boolean isSearchMode;
 
     public interface OnRequestActionListener {
         void onAccept(Users user);
@@ -46,10 +46,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (isSearchMode) {
-            // friendsendingui should have tvName, profileImage, and sendButton
             view = LayoutInflater.from(context).inflate(R.layout.friendsendingui, parent, false);
         } else {
-            // friendrequestuser should have tvName, profileImage, acceptButton, and rejectButton
             view = LayoutInflater.from(context).inflate(R.layout.friendrequestuser, parent, false);
         }
         return new ViewHolder(view);
@@ -65,9 +63,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         }
 
         if (isSearchMode) {
-            // SEARCH MODE: Show the user list and a 'Send' button if they aren't friends and no request is pending
-
-            // Check if the current user is already friends or has already sent a request
             boolean hideSendButton = user.isFriend() || user.isHasSentRequest() || user.isHasReceivedRequest();
 
             if (holder.sendButton != null) {
@@ -76,21 +71,16 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 if (holder.sendButton.getVisibility() == View.VISIBLE) {
                     holder.sendButton.setOnClickListener(v -> {
                         listener.onSendRequest(user);
-                        // Optional: Give feedback and disable button immediately
                         Toast.makeText(context, "Request sent to " + user.getUsername(), Toast.LENGTH_SHORT).show();
                         holder.sendButton.setVisibility(View.GONE);
                     });
                 }
             }
 
-            // Hide request buttons in search mode
             if (holder.acceptButton != null) holder.acceptButton.setVisibility(View.GONE);
             if (holder.rejectButton != null) holder.rejectButton.setVisibility(View.GONE);
 
         } else {
-            // FRIEND REQUEST MODE: Only display users who have sent a request to the current user
-
-            // The list already only contains users with hasReceivedRequest = true
             if (holder.acceptButton != null) {
                 holder.acceptButton.setVisibility(View.VISIBLE);
                 holder.acceptButton.setOnClickListener(v -> listener.onAccept(user));
@@ -101,7 +91,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 holder.rejectButton.setOnClickListener(v -> listener.onReject(user));
             }
 
-            // Hide send button in request mode
             if (holder.sendButton != null) holder.sendButton.setVisibility(View.GONE);
         }
     }
@@ -114,7 +103,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
         ImageView profileImage;
-        // These can be null depending on the layout inflated (friendsendingui vs friendrequestuser)
         ImageView rejectButton, sendButton;
         TextView acceptButton;
 
@@ -122,8 +110,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
             profileImage = itemView.findViewById(R.id.profileImage);
-
-            // Attempt to find all buttons, they will be null if the ID is not in the inflated layout
             acceptButton = itemView.findViewById(R.id.acceptButton);
             rejectButton = itemView.findViewById(R.id.rejectButton);
             sendButton = itemView.findViewById(R.id.sendButton);

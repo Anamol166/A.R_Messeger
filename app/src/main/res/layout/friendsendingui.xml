@@ -6,7 +6,6 @@
     android:layout_height="80dp"
     android:padding="10dp">
 
-    <!-- Profile Image -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
         android:layout_width="55dp"
@@ -18,7 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- Username -->
     <TextView
         android:id="@+id/tvName"
         android:layout_width="0dp"
@@ -35,7 +33,6 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="8dp"/>
 
-    <!-- Send Friend Request Button -->
     <ImageView
         android:id="@+id/sendButton"
         android:layout_width="40dp"

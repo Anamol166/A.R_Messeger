@@ -63,9 +63,9 @@ public class registration extends AppCompatActivity {
 
     private void initCloudinary() {
         HashMap config = new HashMap();
-        config.put("cloud_name", "dxy0ywfqp");
-        config.put("api_key", "974368724742381");
-        config.put("api_secret", "m86UxhYefgUyOm-u69eTZfSDjPE");
+        config.put("cloud_name", "");
+        config.put("api_key", "");
+        config.put("api_secret", "");
 
         try {
             MediaManager.init(this, config);
